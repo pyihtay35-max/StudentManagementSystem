@@ -13,7 +13,7 @@ function StudentForm() {
   useEffect(() => {
     if (id) {
       axios
-        .get(`http://localhost:5000/api/students/${id}`)
+      .get(`${process.env.REACT_APP_API_URL}/students/api/${id}`)
         .then((res) => setFormData(res.data))
         .catch((err) => console.log("Error fetching student:", err));
     }
@@ -29,10 +29,10 @@ function StudentForm() {
     try {
       if (id) {
         // ✏️ Update existing student
-        await axios.put(`http://localhost:5000/api/students/${id}`, formData);
+        await axios.put(`${process.env.REACT_APP_API_URL}/students/api/${id}`, formData);
       } else {
         // ➕ Add new student
-        await axios.post(`http://localhost:5000/api/students`, formData);
+        await axios.post(`${process.env.REACT_APP_API_URL}/students/api/${id}`, formData);
       }
       navigate("/"); // ✅ Redirect to home page after success
     } catch (err) {
