@@ -36,8 +36,17 @@ function StudentForm() {
       }
       navigate("/"); // ✅ Redirect to home page after success
     } catch (err) {
-      console.error("Error saving student:", err);
-    }
+  if (err.response) {
+    // Backend responded with status code outside 2xx
+    console.error("Server Error:", err.response.data, err.response.status);
+  } else if (err.request) {
+    // Request made but no response
+    console.error("No response from server:", err.request);
+  } else {
+    console.error("Error:", err.message);
+  }
+}
+
   };
 
   return (
