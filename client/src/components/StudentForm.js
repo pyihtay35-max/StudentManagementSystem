@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
-
 // ✅ StudentForm component: Add + Edit student data
 function StudentForm() {
   // 🎯 Define state for form fields
