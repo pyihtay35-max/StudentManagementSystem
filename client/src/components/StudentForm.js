@@ -1,59 +1,58 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+
 // ✅ StudentForm component: Add + Edit student data
 function StudentForm() {
-  // 🎯 Define state for form fields
+  // 🎯 Form state
   const [formData, setFormData] = useState({ name: "", email: "", phone: "" });
-  const navigate = useNavigate(); // Navigation for redirect
-  const { id } = useParams(); // Get id from URL when editing student
+  const navigate = useNavigate();
+  const { id } = useParams();
 
-  // 🌀 Load student data if editing (id is available)
+  // 🌐 API URL from environment variable
+  const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000/api";
+
+  // 🌀 Load student data if editing
   useEffect(() => {
     if (id) {
       axios
-      .get(`${process.env.REACT_APP_API_URL}/students/${id}`)
+        .get(`${API_URL}/students/${id}`)
         .then((res) => setFormData(res.data))
-        .catch((err) => console.log("Error fetching student:", err));
+        .catch((err) => console.error("Error fetching student:", err.response?.data || err.message));
     }
-  }, [id]);
+  }, [id, API_URL]);
 
-  // 💡 Handle input changes dynamically
+  // 💡 Handle input change
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // 🚀 Submit form (Add or Update student)
+  // 🚀 Submit form
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (id) {
         // ✏️ Update existing student
-        await axios.put(`${process.env.REACT_APP_API_URL}/students/${id}`, formData);
+        await axios.put(`${API_URL}/students/${id}`, formData);
       } else {
         // ➕ Add new student
-        await axios.post(`${process.env.REACT_APP_API_URL}/students`, formData);
-        console.log("Submitting formData:", formData);
+        await axios.post(`${API_URL}/students`, formData);
       }
       navigate("/"); // ✅ Redirect to home page after success
     } catch (err) {
-  if (err.response) {
-    // Backend responded with status code outside 2xx
-    console.error("Server Error:", err.response.data, err.response.status);
-  } else if (err.request) {
-    // Request made but no response
-    console.error("No response from server:", err.request);
-  } else {
-    console.error("Error:", err.message);
-  }
-}
-
+      // ⚠️ Clearer error logging
+      console.error(
+        "Error saving student:",
+        err.response?.data || err.message
+      );
+      alert(
+        `Failed to save student: ${err.response?.data?.message || err.message}`
+      );
+    }
   };
 
   return (
     <div className="container mt-4" style={{ maxWidth: "600px" }}>
-      <h2 className="mb-4 text-center">
-        {id ? "Edit Student" : "Add New Student"}
-      </h2>
+      <h2 className="mb-4 text-center">{id ? "Edit Student" : "Add New Student"}</h2>
 
       <form onSubmit={handleSubmit}>
         {/* Name Field */}
