@@ -5,7 +5,7 @@ import axios from "axios";
 function StudentList({ students, setStudents }) {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this student?")) {
-      await axios.delete(`${process.env.REACT_APP_API_URL}/students/${id}`);
+      await axios.delete(`${process.env.REACT_APP_API_URL}/api/students/${id}`);
       setStudents(students.filter(s => s._id !== id));
     }
   };
