@@ -32,6 +32,7 @@ function StudentForm() {
       } else {
         // ➕ Add new student
         await axios.post(`${process.env.REACT_APP_API_URL}/students`, formData);
+        console.log("Submitting formData:", formData);
       }
       navigate("/"); // ✅ Redirect to home page after success
     } catch (err) {
